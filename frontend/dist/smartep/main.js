@@ -1017,7 +1017,7 @@ var RegisterComponent = /** @class */ (function () {
                             this.router.navigate(["login"]);
                         }
                         else {
-                            alert("Username is already taken.");
+                            alert("Username and/or password are not valid or not secure enough. Please try again!");
                         }
                         return [2 /*return*/];
                 }
@@ -1270,7 +1270,7 @@ var AuthService = /** @class */ (function () {
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
-                                    //'Authorization': this.getToken()
+                                    // 'Authorization': this.getToken()
                                     'Authorization': token
                                 },
                                 body: JSON.stringify({ name: name, keyword: word })

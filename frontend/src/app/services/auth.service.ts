@@ -42,7 +42,7 @@ export class AuthService {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        //'Authorization': this.getToken()
+        // 'Authorization': this.getToken()
         'Authorization': token
       },
       body: JSON.stringify({ name: name, keyword: word })

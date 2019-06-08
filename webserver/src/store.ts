@@ -96,7 +96,7 @@ export default class Store {
    */
   constructor() {
     this.sessionId = 1;
-    this._secureMode = false;
+    this._secureMode = true;
     // Bindings
     this.connectDb.bind(this);
     this.getUserRole.bind(this);
@@ -156,7 +156,7 @@ export default class Store {
     let user = await this.userRepo.findOne({name: userName});
     user.uuid = identifier;
     console.log(user);
-    this.userRepo.save(user);
+    await this.userRepo.save(user);
     return identifier;
   }
 
@@ -198,8 +198,13 @@ export default class Store {
     }
     
     let user: User = await this.userRepo.findOne({ name: userName});
-    let hashResult: IHashResult = await this.hash(key,user.salt);
-    return user.keyword == hashResult.hash;
+    if (user) {
+      let hashResult: IHashResult = await this.hash(key,user.salt);
+      return user.keyword == hashResult.hash;
+    }
+    else {
+      return false;
+    }
   }
 
   /**

@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
     if (result) {
       this.router.navigate(["login"]);
     } else {
-      alert("Username is already taken.");
+      alert("Username and/or password are not valid or not secure enough. Please try again!");
     }
   }
 
