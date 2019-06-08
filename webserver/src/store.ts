@@ -28,7 +28,7 @@ export interface IHashResult {
  */
 export interface ITokenContent {
   uuid: string,
-  role: string
+  //role: string removed from Christine
 }
 
 export default class Store {
@@ -264,6 +264,7 @@ export default class Store {
    * @memberof Store
    */
   public async addAction(operation: string, uuid: string) : Promise<boolean> {
+    console.log("in add action");
     let action = new Action();
     let user : User = await this.userRepo.findOne({ uuid: uuid});
     if(! user) return false;
@@ -272,6 +273,7 @@ export default class Store {
     action.stamp = new Date();
     action.userId = user.id;
     let result = this.handleError(this.actionRepo.save(action));
+    console.log("in add action found result");
     return !!result;
   }
 
@@ -343,7 +345,12 @@ export default class Store {
    */
   public decode(token: string ) : ITokenContent {
     let payload : any = jwt.decode(token);
-    return payload ? { role: payload.role, uuid: payload.id  } : null;
+    console.log("in decode");
+    console.log(token);
+    console.log(payload);
+    console.log(payload.id);
+    // return payload ? { role: payload.role, uuid: payload.id  } : null; von Christine verändert
+    return payload ? { uuid: payload.id  } : null;
   }
 
   /**
@@ -369,17 +376,19 @@ export default class Store {
     result.operation = operation;
     Object.assign(result,data);
     return JSON.stringify(result);
+    
   }
 
   /**
    * Creates a new token signed with the store secret.
    *
-   * @param {string} role
+   * @param {string} role //removed from Christine
    * @param {string} uuid
    * @returns
    * @memberof Store
    */
-  public createToken(role: string,uuid: string) {
+
+  public createToken(uuid: string) {
     return jwt.sign(
       {id: uuid},
       secret,

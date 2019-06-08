@@ -879,31 +879,24 @@ var NavbarComponent = /** @class */ (function () {
     };
     NavbarComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
             var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this;
-                        return [4 /*yield*/, this._authService.isAdmin()];
-                    case 1:
-                        _a.showAdmin = _b.sent();
-                        this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
-                            var _a;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0:
-                                        this.showLogin = !loggedIn;
-                                        _a = this;
-                                        return [4 /*yield*/, this._authService.isAdmin()];
-                                    case 1:
-                                        _a.showAdmin = _b.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        return [2 /*return*/];
-                }
+            return __generator(this, function (_a) {
+                //this.showAdmin = await this._authService.isAdmin(); removed from Christine
+                this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
+                    var _a;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                this.showLogin = !loggedIn;
+                                _a = this;
+                                return [4 /*yield*/, this._authService.isAdmin()];
+                            case 1:
+                                _a.showAdmin = _b.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
             });
         });
     };
@@ -1182,9 +1175,7 @@ var ActionService = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthService", function() { return AuthService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @auth0/angular-jwt */ "./node_modules/@auth0/angular-jwt/index.js");
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @auth0/angular-jwt */ "./node_modules/@auth0/angular-jwt/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1229,7 +1220,6 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-
 
 
 var AuthService = /** @class */ (function () {
@@ -1280,7 +1270,8 @@ var AuthService = /** @class */ (function () {
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
-                                    'Authorization': this.getToken()
+                                    //'Authorization': this.getToken()
+                                    'Authorization': token
                                 },
                                 body: JSON.stringify({ name: name, keyword: word })
                             })];
@@ -1315,38 +1306,52 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.getToken = function () {
         return localStorage.getItem('token');
     };
+    // public getRole(): string {
+    //   const token = localStorage.getItem('token');
+    //   if (token) {
+    //     return decode(token).role;
+    //   }
+    //   return null;
+    // }
     AuthService.prototype.getRole = function () {
-        var token = localStorage.getItem('token');
-        if (token) {
-            return jwt_decode__WEBPACK_IMPORTED_MODULE_1___default()(token).role;
+        if (this.isAdmin) {
+            return 'admin';
         }
         return null;
     };
     AuthService.prototype.isAdmin = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var token;
             return __generator(this, function (_a) {
-                return [2 /*return*/, fetch(location.origin + "/api/access", {
-                        method: 'GET',
-                        headers: {
-                            // 'Accept': 'application/json',
-                            // Content-Type': 'application/json',
-                            'Authorization': this.getToken()
-                        }
-                    }).then(function (res) {
-                        if (res.ok) {
-                            return res.json();
-                        }
-                        else {
-                            return null;
-                        }
-                    }).then(function (data) {
-                        if (data && data.isAdmin) {
-                            return data.isAdmin;
-                        }
-                        else {
-                            return false;
-                        }
-                    })];
+                token = this.getToken();
+                if (token) {
+                    return [2 /*return*/, fetch(location.origin + "/api/access", {
+                            method: 'GET',
+                            headers: {
+                                // 'Accept': 'application/json',
+                                // Content-Type': 'application/json',
+                                'Authorization': this.getToken()
+                            }
+                        }).then(function (res) {
+                            if (res.ok) {
+                                return res.json();
+                            }
+                            else {
+                                return null;
+                            }
+                        }).then(function (data) {
+                            if (data && data.isAdmin) {
+                                return data.isAdmin;
+                            }
+                            else {
+                                return false;
+                            }
+                        })];
+                }
+                else {
+                    return [2 /*return*/, false];
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -1354,7 +1359,7 @@ var AuthService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_2__["JwtHelperService"]])
+        __metadata("design:paramtypes", [_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_1__["JwtHelperService"]])
     ], AuthService);
     return AuthService;
 }());

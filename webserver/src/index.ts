@@ -30,7 +30,7 @@ export class Server {
     this.app = express();
     this.app.use(bodyParser.json());
     // Middleware
-    this.app.use(this.logRequest.bind(this));
+    //this.app.use(this.logRequest.bind(this));
     //Publicly accessible routes
     this.app.post("/api/login", this.loginUser.bind(this));
     this.app.post("/api/register",this.registerUser.bind(this));
@@ -123,8 +123,9 @@ export class Server {
     if (await this.store.validateUserCredentials(name, keyword)
     ) {
       let uuid = await this.store.getUserUuid(name);
-      let userRole = await this.store.getUserRole(name);
-      let token = await this.store.createToken(userRole,uuid);
+      //let userRole = await this.store.getUserRole(name); removed by Christine
+      //let token = await this.store.createToken(userRole, uuid);
+      let token = await this.store.createToken(uuid);
 
       res.status(200).send(JSON.stringify(token));
     } else {
@@ -186,19 +187,32 @@ export class Server {
     let tokenContent : ITokenContent = this.store.decode(token);
     console.log("exists question");
     let exists: boolean = await this.store.exists(tokenContent.uuid);
+    console.log(exists);
     console.log("exists done");
 
     return exists ? tokenContent.uuid : null ;
   }
 
-  private async isAdmin(request: express.Request): Promise<string> {
+  // private async isAdmin(request: express.Request): Promise<string> {
+  //   let token = request.headers.authorization ? request.headers.authorization : null;
+  //   if (! token ) return new Promise((resolve,_) => {resolve(null)});
+
+  //   let tokenContent : ITokenContent = this.store.decode(token);
+  //   let exists : boolean = await this.store.exists(tokenContent.uuid);
+  //   console.log(tokenContent);
+  //   return exists && tokenContent.role === "admin" ? tokenContent.uuid : null;
+  // }
+
+    //added by Christine
+    private async isAdmin(request: express.Request): Promise<string> {
     let token = request.headers.authorization ? request.headers.authorization : null;
     if (! token ) return new Promise((resolve,_) => {resolve(null)});
 
     let tokenContent : ITokenContent = this.store.decode(token);
     let exists : boolean = await this.store.exists(tokenContent.uuid);
     console.log(tokenContent);
-    return exists && tokenContent.role === "admin" ? tokenContent.uuid : null;
+    let isAdmin : boolean = await this.store.isAdminFromID(tokenContent.uuid);
+    return exists && isAdmin ? tokenContent.uuid : null;
   }
 
   private log(message: string) : void {
@@ -207,13 +221,16 @@ export class Server {
   }
 
   private async isSessionIdAdmin(request: express.Request, response: express.Response): Promise<void> {
+    console.log("in isSessionIdAdmin");
     let token = request.headers.authorization ? request.headers.authorization : null;
 
     if (! token){
        response.status(200).send(JSON.stringify({isAdmin:false}));
     } else {
+      console.log("before is Admin");
       let tokenContent : ITokenContent = this.store.decode(token);
       let isAdmin : boolean = await this.store.isAdminFromID(tokenContent.uuid);
+      console.log("after is Admin");
 
       if (isAdmin) {
         response.status(200).send(JSON.stringify({isAdmin:true}));

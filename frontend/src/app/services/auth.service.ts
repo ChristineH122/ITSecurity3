@@ -42,7 +42,8 @@ export class AuthService {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': this.getToken()
+        //'Authorization': this.getToken()
+        'Authorization': token
       },
       body: JSON.stringify({ name: name, keyword: word })
     });
@@ -76,16 +77,26 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  public getRole(): string {
-    const token = localStorage.getItem('token');
-    if (token) {
-      return decode(token).role;
+  // public getRole(): string {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     return decode(token).role;
+  //   }
+
+  //   return null;
+  // }
+
+    public getRole(): string {
+    if (this.isAdmin) {
+      return 'admin';
     }
 
     return null;
   }
 
   public async isAdmin(): Promise<boolean> {
+    const token = this.getToken();
+    if (token) {
     return fetch(`${location.origin}/api/access`, {
       method: 'GET',
       headers: {
@@ -104,6 +115,9 @@ export class AuthService {
         return false;
       }
     });
+  } else {
+    return false;
+  }
     // return this.getRole() === 'admin';
   }
 }
