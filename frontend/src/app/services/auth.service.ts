@@ -54,6 +54,11 @@ export class AuthService {
       this.loggedIn.emit(true);
       return true;
     } else {
+      if (response.status === 429) {
+        alert('Too many attempts in a short time. You will have to wait some minutes to try again.');
+      } else {
+        alert('Wrong username or password!');
+      }
       return false;
     }
   }

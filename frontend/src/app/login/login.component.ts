@@ -27,8 +27,6 @@ export class LoginComponent implements OnInit {
     console.log(result);
     if (result) {
       this._router.navigate(['devices']);
-    } else {
-      alert('Wrong username or password!');
     }
   }
 }

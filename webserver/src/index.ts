@@ -7,6 +7,7 @@ import { Device } from "./entity/Device";
 /* tslint: disable */
 const bodyParser = require("body-parser");
 const fs = require('fs');
+const expressBrute = require('express-brute');
 /* tslint: enable */ 
 
 const allowedExt = [
@@ -29,10 +30,20 @@ export class Server {
     this.store.connectDb();
     this.app = express();
     this.app.use(bodyParser.json());
+    
+    //bruteforce protection - according to https://www.npmjs.com/package/express-brute
+    const memStore = new expressBrute.MemoryStore();
+    const bruteforce = new expressBrute(memStore, {
+      freeRetries: 3,
+      minWait: 1*60*1000, // 1 minute
+      maxWait: 60*60*1000, // 1 hour,
+      failCallback: this.failCallback,
+    });
+
     // Middleware
     //this.app.use(this.logRequest.bind(this));
     //Publicly accessible routes
-    this.app.post("/api/login", this.loginUser.bind(this));
+    this.app.post("/api/login", bruteforce.prevent, this.loginUser.bind(this));
     this.app.post("/api/register",this.registerUser.bind(this));
     this.app.put("/api/update/devices",this.updateDevices.bind(this));
     this.app.get("/api/devices", this.getDevices.bind(this));
@@ -43,6 +54,11 @@ export class Server {
     this.app.listen(4000);
     // Bindings
     this.log.bind(this);
+  }
+
+  private async failCallback(req: express.Request, res: express.Response, next: express.NextFunction, nextValidRequestDate: any) {
+    console.log('BRUTEFORCE!!!!!');
+    res.status(429).send();
   }
 
   // TODO: delete when app is completed
