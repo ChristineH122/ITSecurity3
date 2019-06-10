@@ -7,6 +7,7 @@ import { RoleguardService as RoleGuard } from './services/roleguard.service';
 import { RegisterComponent } from './register/register.component';
 import { DevicesComponent } from './devices/devices.component';
 import { HistoryComponent } from './history/history.component';
+import { SecurityComponent } from './security/security.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,14 @@ const routes: Routes = [
   {
     path: 'history',
     component: HistoryComponent,
+    canActivate: [RoleGuard],
+    data: {
+      expectedRole: 'admin'
+    }
+  },
+  {
+    path: 'security',
+    component: SecurityComponent,
     canActivate: [RoleGuard],
     data: {
       expectedRole: 'admin'

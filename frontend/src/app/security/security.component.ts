@@ -3,11 +3,11 @@ import { AuthService } from '../services/auth.service';
 import { SecurityService } from '../services/security.service';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  selector: 'app-security',
+  templateUrl: './security.component.html',
+  styleUrls: ['./security.component.scss']
 })
-export class AdminComponent implements OnInit {
+export class SecurityComponent implements OnInit {
 
   constructor(private auth: AuthService, private sec: SecurityService) {
   }

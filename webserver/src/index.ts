@@ -45,10 +45,12 @@ export class Server {
     //Publicly accessible routes
     this.app.post("/api/login", bruteforce.prevent, this.loginUser.bind(this));
     this.app.post("/api/register",this.registerUser.bind(this));
+    this.app.post("/api/security", this.setSecureMode.bind(this));
     this.app.put("/api/update/devices",this.updateDevices.bind(this));
     this.app.get("/api/devices", this.getDevices.bind(this));
     this.app.get("/api/actions", this.getActions.bind(this));
     this.app.get("/api/access", this.isSessionIdAdmin.bind(this));
+    this.app.get("/api/security", this.getSecureMode.bind(this));
     this.app.get("*",this.webContent.bind(this));
     //Port
     this.app.listen(4000);
@@ -255,6 +257,69 @@ export class Server {
       }
     }
 
+
+  }
+
+  private async getSecureMode(request: express.Request, response: express.Response): Promise<void> {
+    let token = request.headers.authorization ? request.headers.authorization : null;
+
+    if (! token){
+       response.status(401).send();
+    } else {
+      let tokenContent : ITokenContent = this.store.decode(token);
+      let isAdmin : boolean = await this.store.isAdminFromID(tokenContent.uuid);
+
+      if (isAdmin) {
+        response.status(200).send(JSON.stringify({secureMode:this.store.secureMode}));
+      } else {
+        response.status(401).send();
+      }
+    }
+  }
+
+  private async setSecureMode(request: express.Request, response: express.Response): Promise<void> {
+    console.log("in set secure mode");
+    let token = request.headers.authorization ? request.headers.authorization : null;
+
+    if (! token){
+       response.status(401).send();
+    } else {
+      let tokenContent : ITokenContent = this.store.decode(token);
+      let isAdmin : boolean = await this.store.isAdminFromID(tokenContent.uuid);
+      let resSend = false;
+
+      if (isAdmin) {
+        console.log("is admin");
+        console.log(request.body);
+        if (request.body.status !== undefined) {
+          console.log(request.body.status);
+          if (request.body.status === true) {
+            console.log("request sends true");
+            this.store.secureMode = true;
+            response.status(200).send();
+            resSend = true;
+          } else {
+          if (request.body.status === false) {
+            console.log("request sends false");
+            this.store.secureMode = false;
+            response.status(200).send();
+            resSend = true;
+          }
+
+        }
+
+
+        if (!resSend) {
+          response.status(400).send();
+        }
+          
+        } else {
+          response.status(400).send();
+        }
+      } else {
+        response.status(401).send();
+      }
+    }
 
   }
 }

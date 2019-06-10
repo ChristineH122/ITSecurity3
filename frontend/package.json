@@ -25,6 +25,7 @@
     "@auth0/angular-jwt": "^2.1.0",
     "bootstrap": "^4.1.3",
     "core-js": "^2.5.4",
+    "express-brute": "^1.0.1",
     "hammer-timejs": "^1.1.0",
     "hammerjs": "^2.0.8",
     "jwt-decode": "^2.2.0",

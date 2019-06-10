@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-tab-group>\n  <mat-tab label=\"Settings\">\n    <app-settings></app-settings>\n  </mat-tab>\n  <mat-tab label=\"History\">\n    <app-history></app-history>\n  </mat-tab>\n</mat-tab-group>"
+module.exports = "<mat-tab-group>\n  <mat-tab label=\"Settings\">\n    <app-settings></app-settings>\n  </mat-tab>\n  <mat-tab label=\"History\">\n    <app-history></app-history>\n  </mat-tab>\n  <mat-tab label=\"Security\">\n      <div class=\"container\">\n      <div class=\"row\">\n          <div *ngIf=\"securityState\" class=\"btn btn-success w-100\">Secure mode is currently on!</div>\n          <div *ngIf=\"!securityState\" class=\"btn btn-danger col-sm-12 align-self-center\">Secure mode is currently off!</div>\n          <mat-button-toggle class=\"col-sm-12 align-self-center\" [checked]=\"securityState\" (change)=\"changeState()\">Change Secure Mode</mat-button-toggle>\n        </div>\n      </div>\n    </mat-tab>\n</mat-tab-group>"
 
 /***/ }),
 
@@ -57,6 +57,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AdminComponent", function() { return AdminComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _services_security_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/security.service */ "./src/app/services/security.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -103,16 +104,36 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 };
 
 
+
 var AdminComponent = /** @class */ (function () {
-    function AdminComponent(auth) {
+    function AdminComponent(auth, sec) {
         this.auth = auth;
+        this.sec = sec;
     }
     AdminComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
+                this.sec.isSecureStatusOn().then(function (state) {
+                    if (state !== null) {
+                        console.log("in ng on init security is " + state);
+                        _this.securityState = state;
+                    }
+                    else {
+                        window.alert('There has been a problem with server communication!');
+                    }
+                });
                 return [2 /*return*/];
             });
         });
+    };
+    AdminComponent.prototype.changeState = function () {
+        if (this.sec.setSecureStatus(!this.securityState)) {
+            this.securityState = !this.securityState;
+        }
+        else {
+            window.alert('There has been a problem with server communication!');
+        }
     };
     AdminComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -120,7 +141,7 @@ var AdminComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./admin.component.html */ "./src/app/admin/admin.component.html"),
             styles: [__webpack_require__(/*! ./admin.component.scss */ "./src/app/admin/admin.component.scss")]
         }),
-        __metadata("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"]])
+        __metadata("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"], _services_security_service__WEBPACK_IMPORTED_MODULE_2__["SecurityService"]])
     ], AdminComponent);
     return AdminComponent;
 }());
@@ -148,12 +169,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _register_register_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./register/register.component */ "./src/app/register/register.component.ts");
 /* harmony import */ var _devices_devices_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./devices/devices.component */ "./src/app/devices/devices.component.ts");
 /* harmony import */ var _history_history_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./history/history.component */ "./src/app/history/history.component.ts");
+/* harmony import */ var _security_security_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./security/security.component */ "./src/app/security/security.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -182,6 +205,14 @@ var routes = [
     {
         path: 'history',
         component: _history_history_component__WEBPACK_IMPORTED_MODULE_8__["HistoryComponent"],
+        canActivate: [_services_roleguard_service__WEBPACK_IMPORTED_MODULE_5__["RoleguardService"]],
+        data: {
+            expectedRole: 'admin'
+        }
+    },
+    {
+        path: 'security',
+        component: _security_security_component__WEBPACK_IMPORTED_MODULE_9__["SecurityComponent"],
         canActivate: [_services_roleguard_service__WEBPACK_IMPORTED_MODULE_5__["RoleguardService"]],
         data: {
             expectedRole: 'admin'
@@ -295,6 +326,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _devices_devices_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./devices/devices.component */ "./src/app/devices/devices.component.ts");
 /* harmony import */ var _history_history_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./history/history.component */ "./src/app/history/history.component.ts");
 /* harmony import */ var _settings_settings_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./settings/settings.component */ "./src/app/settings/settings.component.ts");
+/* harmony import */ var _security_security_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./security/security.component */ "./src/app/security/security.component.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -314,6 +346,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -359,11 +392,13 @@ var AppModule = /** @class */ (function () {
                 _devices_devices_component__WEBPACK_IMPORTED_MODULE_13__["DevicesComponent"],
                 _history_history_component__WEBPACK_IMPORTED_MODULE_14__["HistoryComponent"],
                 _settings_settings_component__WEBPACK_IMPORTED_MODULE_15__["SettingsComponent"],
+                _security_security_component__WEBPACK_IMPORTED_MODULE_16__["SecurityComponent"],
             ],
             imports: [
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTabsModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatSortModule"],
                 _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatTableModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_3__["MatButtonToggleModule"],
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_8__["BrowserAnimationsModule"],
@@ -660,7 +695,7 @@ var HistoryComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12\">\n      <form>\n        <div class=\"row justify-content-center\">\n          <img alt=\"Angular Logo\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==\">\n        </div>\n        <div id=\"form-container\">\n          <div class=\"row justify-content-center\">\n            <label><b>Username</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input [(ngModel)]='username' name=\"user\" type=\"text\" placeholder=\"Enter Username\" required maxlength=\"30\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label><b>Password</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" [(ngModel)]='keyword' autocomplete=\"on\" name=\"pw\" placeholder=\"Enter Passowrd\" required maxlength=\"100\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"submit\" (click)=\"login()\" value=\"Login\" class=\"btn bg-success\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <a [routerLink]=\"['/register']\">Register as a new user</a>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12\">\n      <form>\n        <div id=\"form-container\">\n          <div class=\"row justify-content-center\">\n            <label><b>Username</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input [(ngModel)]='username' name=\"user\" type=\"text\" placeholder=\"Enter Username\" required maxlength=\"30\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label><b>Password</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" [(ngModel)]='keyword' autocomplete=\"on\" name=\"pw\" placeholder=\"Enter Password\" required maxlength=\"100\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"submit\" (click)=\"login()\" value=\"Login\" class=\"btn bg-success\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <a [routerLink]=\"['/register']\">Register as a new user</a>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -671,7 +706,7 @@ module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <d
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "img {\n  width: 150px; }\n\nform {\n  border-radius: 1em;\n  text-align: center;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  margin: auto;\n  margin-top: 8%;\n  background-color: white;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 black;\n  height: 30em;\n  width: 18em; }\n\nform #form-container {\n    margin-top: 20px; }\n\nform .row {\n    margin-top: 0.5em;\n    padding: 3px; }\n\nform input[type=\"text\"], form input[type=\"password\"] {\n    border: 1px solid grey; }\n\nform input[type=\"submit\"] {\n    border-radius: 0.7em;\n    width: 40%; }\n\n@media only screen and (max-width: 800px) {\n  form {\n    width: 20em;\n    margin-top: 20%; }\n    form #form-container {\n      height: 80%; }\n  input[type=\"text\"], input[type=\"password\"] {\n    width: 60%;\n    font-size: 20px; }\n  input[type=\"submit\"] {\n    font-size: 20px; } }\n\n@media only screen and (max-width: 450px) {\n  form {\n    margin-top: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbG9naW4vQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXGxvZ2luXFxsb2dpbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLDBCQUFrQjtFQUFsQix1QkFBa0I7RUFBbEIsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixjQUFjO0VBQ2QsdUJBQXVCO0VBQ3ZCLDhEQUE4RDtFQUM5RCxZQUFZO0VBQ1osV0FBVyxFQUFBOztBQVRmO0lBWVEsZ0JBQWdCLEVBQUE7O0FBWnhCO0lBZ0JRLGlCQUFpQjtJQUNqQixZQUFZLEVBQUE7O0FBakJwQjtJQXFCUSxzQkFBc0IsRUFBQTs7QUFyQjlCO0lBeUJRLG9CQUFvQjtJQUNwQixVQUFVLEVBQUE7O0FBSWxCO0VBRUk7SUFDSSxXQUFXO0lBQ1gsZUFBZSxFQUFBO0lBRm5CO01BS1EsV0FBVyxFQUFBO0VBSW5CO0lBQ0ksVUFBVTtJQUNWLGVBQWUsRUFBQTtFQUduQjtJQUNJLGVBQWUsRUFBQSxFQUNsQjs7QUFHTDtFQUNJO0lBQ0ksZUFBZSxFQUFBLEVBQ2xCIiwiZmlsZSI6InNyYy9hcHAvbG9naW4vbG9naW4uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpbWd7XG4gICAgd2lkdGg6IDE1MHB4O1xufVxuXG5mb3JtIHtcbiAgICBib3JkZXItcmFkaXVzOiAxZW07XG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgIHdpZHRoOiBtaW4tY29udGVudDtcbiAgICBtYXJnaW46IGF1dG87XG4gICAgbWFyZ2luLXRvcDogOCU7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgYm94LXNoYWRvdzogMCA0cHggOHB4IDAgcmdiYSgwLCAwLCAwLCAwLjIpLCAwIDZweCAyMHB4IDAgYmxhY2s7XG4gICAgaGVpZ2h0OiAzMGVtO1xuICAgIHdpZHRoOiAxOGVtO1xuXG4gICAgI2Zvcm0tY29udGFpbmVye1xuICAgICAgICBtYXJnaW4tdG9wOiAyMHB4O1xuICAgIH1cblxuICAgIC5yb3d7XG4gICAgICAgIG1hcmdpbi10b3A6IDAuNWVtO1xuICAgICAgICBwYWRkaW5nOiAzcHg7XG4gICAgfVxuXG4gICAgaW5wdXRbdHlwZT1cInRleHRcIl0sIGlucHV0W3R5cGU9XCJwYXNzd29yZFwiXXtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgZ3JleTtcbiAgICB9XG5cbiAgICBpbnB1dFt0eXBlPVwic3VibWl0XCJde1xuICAgICAgICBib3JkZXItcmFkaXVzOiAwLjdlbTtcbiAgICAgICAgd2lkdGg6IDQwJTtcbiAgICB9XG59IFxuXG5AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDgwMHB4KSB7XG5cbiAgICBmb3Jte1xuICAgICAgICB3aWR0aDogMjBlbTtcbiAgICAgICAgbWFyZ2luLXRvcDogMjAlO1xuXG4gICAgICAgICNmb3JtLWNvbnRhaW5lcntcbiAgICAgICAgICAgIGhlaWdodDogODAlO1xuICAgICAgICB9XG4gICAgfVxuXG4gICAgaW5wdXRbdHlwZT1cInRleHRcIl0sIGlucHV0W3R5cGU9XCJwYXNzd29yZFwiXXtcbiAgICAgICAgd2lkdGg6IDYwJTtcbiAgICAgICAgZm9udC1zaXplOiAyMHB4O1xuICAgIH1cblxuICAgIGlucHV0W3R5cGU9XCJzdWJtaXRcIl17XG4gICAgICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICB9XG59XG5cbkBtZWRpYSBvbmx5IHNjcmVlbiBhbmQgKG1heC13aWR0aDogNDUwcHgpIHtcbiAgICBmb3Jte1xuICAgICAgICBtYXJnaW4tdG9wOiAyNSU7XG4gICAgfVxufSJdfQ== */"
+module.exports = "form {\n  border-radius: 1em;\n  text-align: center;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  margin: auto;\n  margin-top: 8%;\n  background-color: #bdc3c7;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 black;\n  height: 20em;\n  width: 25em; }\n  form #form-container {\n    margin-top: 20px; }\n  form .row {\n    margin-top: 0.5em;\n    padding: 3px; }\n  form input[type=\"text\"], form input[type=\"password\"] {\n    border: 1px solid grey; }\n  form input[type=\"submit\"] {\n    border-radius: 0.7em;\n    width: 40%; }\n  @media only screen and (max-width: 800px) {\n  form {\n    width: 20em;\n    margin-top: 20%; }\n    form #form-container {\n      height: 80%; }\n  input[type=\"text\"], input[type=\"password\"] {\n    width: 60%;\n    font-size: 20px; }\n  input[type=\"submit\"] {\n    font-size: 20px; } }\n  @media only screen and (max-width: 450px) {\n  form {\n    margin-top: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbG9naW4vQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXGxvZ2luXFxsb2dpbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFrQjtFQUNsQixrQkFBa0I7RUFDbEIsMEJBQWtCO0VBQWxCLHVCQUFrQjtFQUFsQixrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGNBQWM7RUFDZCx5QkFBeUI7RUFDekIsOERBQThEO0VBQzlELFlBQVk7RUFDWixXQUFXLEVBQUE7RUFUZjtJQVlRLGdCQUFnQixFQUFBO0VBWnhCO0lBZ0JRLGlCQUFpQjtJQUNqQixZQUFZLEVBQUE7RUFqQnBCO0lBcUJRLHNCQUFzQixFQUFBO0VBckI5QjtJQXlCUSxvQkFBb0I7SUFDcEIsVUFBVSxFQUFBO0VBSWxCO0VBRUk7SUFDSSxXQUFXO0lBQ1gsZUFBZSxFQUFBO0lBRm5CO01BS1EsV0FBVyxFQUFBO0VBSW5CO0lBQ0ksVUFBVTtJQUNWLGVBQWUsRUFBQTtFQUduQjtJQUNJLGVBQWUsRUFBQSxFQUNsQjtFQUdMO0VBQ0k7SUFDSSxlQUFlLEVBQUEsRUFDbEIiLCJmaWxlIjoic3JjL2FwcC9sb2dpbi9sb2dpbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbImZvcm0ge1xuICAgIGJvcmRlci1yYWRpdXM6IDFlbTtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgd2lkdGg6IG1pbi1jb250ZW50O1xuICAgIG1hcmdpbjogYXV0bztcbiAgICBtYXJnaW4tdG9wOiA4JTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjYmRjM2M3O1xuICAgIGJveC1zaGFkb3c6IDAgNHB4IDhweCAwIHJnYmEoMCwgMCwgMCwgMC4yKSwgMCA2cHggMjBweCAwIGJsYWNrO1xuICAgIGhlaWdodDogMjBlbTtcbiAgICB3aWR0aDogMjVlbTtcblxuICAgICNmb3JtLWNvbnRhaW5lcntcbiAgICAgICAgbWFyZ2luLXRvcDogMjBweDtcbiAgICB9XG5cbiAgICAucm93e1xuICAgICAgICBtYXJnaW4tdG9wOiAwLjVlbTtcbiAgICAgICAgcGFkZGluZzogM3B4O1xuICAgIH1cblxuICAgIGlucHV0W3R5cGU9XCJ0ZXh0XCJdLCBpbnB1dFt0eXBlPVwicGFzc3dvcmRcIl17XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIGdyZXk7XG4gICAgfVxuXG4gICAgaW5wdXRbdHlwZT1cInN1Ym1pdFwiXXtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogMC43ZW07XG4gICAgICAgIHdpZHRoOiA0MCU7XG4gICAgfVxufSBcblxuQG1lZGlhIG9ubHkgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiA4MDBweCkge1xuXG4gICAgZm9ybXtcbiAgICAgICAgd2lkdGg6IDIwZW07XG4gICAgICAgIG1hcmdpbi10b3A6IDIwJTtcblxuICAgICAgICAjZm9ybS1jb250YWluZXJ7XG4gICAgICAgICAgICBoZWlnaHQ6IDgwJTtcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGlucHV0W3R5cGU9XCJ0ZXh0XCJdLCBpbnB1dFt0eXBlPVwicGFzc3dvcmRcIl17XG4gICAgICAgIHdpZHRoOiA2MCU7XG4gICAgICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICB9XG5cbiAgICBpbnB1dFt0eXBlPVwic3VibWl0XCJde1xuICAgICAgICBmb250LXNpemU6IDIwcHg7XG4gICAgfVxufVxuXG5AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDQ1MHB4KSB7XG4gICAgZm9ybXtcbiAgICAgICAgbWFyZ2luLXRvcDogMjUlO1xuICAgIH1cbn0iXX0= */"
 
 /***/ }),
 
@@ -757,9 +792,6 @@ var LoginComponent = /** @class */ (function () {
                         if (result) {
                             this._router.navigate(['devices']);
                         }
-                        else {
-                            alert('Wrong username or password!');
-                        }
                         return [2 /*return*/];
                 }
             });
@@ -795,7 +827,7 @@ var LoginComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow mb-2\">\n  <a class=\"navbar-brand\" [routerLink]=\"['/pictures']\">\n    <img alt=\"Angular Logo\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==\">\n  </a>\n  <div class=\"collapse navbar-collapse\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/pictures']\">Home</a>\n      </li>\n    </ul>\n  </div>\n  <div class=\"dropdown d-lg-none float-right\">\n    <button type=\"button\" class=\"bg-transparent border-0\" data-toggle=\"dropdown\">\n      <i class=\"material-icons\">\n        dehaze\n      </i>\n    </button>\n    <div class=\"dropdown-menu bg-dark\">\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showLogin\" [routerLink]=\"['/login']\">Login</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"!showLogin\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n    </div>\n  </div>\n  <div class=\"d-none d-lg-block\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\" *ngIf=\"showLogin\">\n        <a class=\"nav-link\" [routerLink]=\"['/login']\">Login</a>\n      </li>\n      <li class=\"nav-item\" *ngIf=\"!showLogin\">\n        <a class=\"nav-link\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n      </li>\n      <li class=\"nav-item\" *ngIf=\"showAdmin\">\n        <a class=\"nav-link\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>\n    </ul>\n  </div>\n</nav>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow mb-2\">\n  <div class=\"collapse navbar-collapse\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/devices']\">Home</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      </li>\n    </ul>\n  </div>\n  <div class=\"dropdown d-lg-none float-right\">\n    <button type=\"button\" class=\"bg-transparent border-0\" data-toggle=\"dropdown\">\n      <i class=\"material-icons\">\n        dehaze\n      </i>\n    </button>\n    <div class=\"dropdown-menu bg-dark\">\n      <a class=\"dropdown-item nav-link bg-dark text-light\" [routerLink]=\"['/devices']\">Home</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showLogin\" [routerLink]=\"['/login']\">Login</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"!showLogin\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n    </div>\n  </div>\n  <div class=\"d-none d-lg-block\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\" *ngIf=\"showLogin\">\n        <a class=\"nav-link\" [routerLink]=\"['/login']\">Login</a>\n      </li>\n      <li class=\"nav-item\" *ngIf=\"!showLogin\">\n        <a class=\"nav-link\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n      </li>\n      <!--<li class=\"nav-item\" *ngIf=\"showAdmin\">\n        <a class=\"nav-link\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>-->\n    </ul>\n  </div>\n</nav>"
 
 /***/ }),
 
@@ -922,7 +954,7 @@ var NavbarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12\">\n      <form (ngSubmit)=\"register()\">\n        <div class=\"row justify-content-center\">\n          <img alt=\"Angular Logo\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==\">\n        </div>\n        <div id=\"form-container\">\n          <div class=\"row justify-content-center\">\n            <label>Username:</label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"text\" autocomplete=\"name\" [(ngModel)]='name' name=\"user\" placeholder=\"Username\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label>Password:</label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" autocomplete=\"new-password\" [(ngModel)]='phraseOne' name=\"phraseOne\" placeholder=\"Password\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label>Repeat Password:</label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" autocomplete=\"new-password\" [(ngModel)]='phraseTwo' name=\"phraseTwo\" placeholder=\"Password\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <input [disabled]=\"disableSubmit()\" class=\"btn bg-success\" type=\"submit\" value=\"Register\" >\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <div class=\"col-12\">\n      <form (ngSubmit)=\"register()\">\n        <div id=\"form-container\">\n          <div class=\"row justify-content-center\">\n            <label><b>Username</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"text\" autocomplete=\"name\" [(ngModel)]='name' name=\"user\" placeholder=\"Username\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label><b>Password</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" autocomplete=\"new-password\" [(ngModel)]='phraseOne' name=\"phraseOne\" placeholder=\"Password\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <label><b>Repeat Password:</b></label>\n          </div>\n          <div class=\"row justify-content-center\">\n            <input type=\"password\" autocomplete=\"new-password\" [(ngModel)]='phraseTwo' name=\"phraseTwo\" placeholder=\"Password\" />\n          </div>\n          <div class=\"row justify-content-center\">\n            <input [disabled]=\"disableSubmit()\" class=\"btn bg-success\" type=\"submit\" value=\"Register\" >\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -933,7 +965,7 @@ module.exports = "<div class=\"container-fluid\">\n  <div class=\"row\">\n    <d
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "img {\n  width: 150px; }\n\nform {\n  border-radius: 1em;\n  text-align: center;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  margin: auto;\n  margin-top: 8%;\n  background-color: white;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 black;\n  height: 30em;\n  width: 18em; }\n\nform .row {\n    margin-top: 0.2em;\n    padding: 3px; }\n\nform input[type=\"text\"], form input[type=\"password\"] {\n    border: 1px solid grey; }\n\nform input[type=\"submit\"] {\n    border-radius: 0.7em;\n    width: 40%; }\n\nform input[tpye=\"submit\"]:disabled {\n    background-color: red !important;\n    color: black !important; }\n\n@media only screen and (max-width: 800px) {\n  form {\n    width: 20em;\n    margin-top: 20%; }\n    form #form-container {\n      height: 80%; }\n  input[type=\"text\"], input[type=\"password\"] {\n    width: 60%;\n    font-size: 20px; }\n  input[type=\"submit\"] {\n    font-size: 20px; } }\n\n@media only screen and (max-width: 450px) {\n  form {\n    margin-top: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcmVnaXN0ZXIvQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXHJlZ2lzdGVyXFxyZWdpc3Rlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLDBCQUFrQjtFQUFsQix1QkFBa0I7RUFBbEIsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixjQUFjO0VBQ2QsdUJBQXVCO0VBQ3ZCLDhEQUE4RDtFQUM5RCxZQUFZO0VBQ1osV0FBVyxFQUFBOztBQVRmO0lBWVEsaUJBQWlCO0lBQ2pCLFlBQVksRUFBQTs7QUFicEI7SUFrQlEsc0JBQXNCLEVBQUE7O0FBbEI5QjtJQXNCUSxvQkFBb0I7SUFDcEIsVUFBVSxFQUFBOztBQXZCbEI7SUEyQlEsZ0NBQWdDO0lBQ2hDLHVCQUF1QixFQUFBOztBQUkvQjtFQUVJO0lBQ0ksV0FBVztJQUNYLGVBQWUsRUFBQTtJQUZuQjtNQUtRLFdBQVcsRUFBQTtFQUluQjtJQUNJLFVBQVU7SUFDVixlQUFlLEVBQUE7RUFHbkI7SUFDSSxlQUFlLEVBQUEsRUFDbEI7O0FBR0w7RUFDSTtJQUNJLGVBQWUsRUFBQSxFQUNsQiIsImZpbGUiOiJzcmMvYXBwL3JlZ2lzdGVyL3JlZ2lzdGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiaW1ne1xuICAgIHdpZHRoOiAxNTBweDtcbn1cblxuZm9ybSB7XG4gICAgYm9yZGVyLXJhZGl1czogMWVtO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICB3aWR0aDogbWluLWNvbnRlbnQ7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIG1hcmdpbi10b3A6IDglO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgIGJveC1zaGFkb3c6IDAgNHB4IDhweCAwIHJnYmEoMCwgMCwgMCwgMC4yKSwgMCA2cHggMjBweCAwIGJsYWNrO1xuICAgIGhlaWdodDogMzBlbTtcbiAgICB3aWR0aDogMThlbTtcblxuICAgIC5yb3d7XG4gICAgICAgIG1hcmdpbi10b3A6IDAuMmVtO1xuICAgICAgICBwYWRkaW5nOiAzcHg7XG4gICAgfVxuXG5cbiAgICBpbnB1dFt0eXBlPVwidGV4dFwiXSwgaW5wdXRbdHlwZT1cInBhc3N3b3JkXCJde1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCBncmV5O1xuICAgIH1cblxuICAgIGlucHV0W3R5cGU9XCJzdWJtaXRcIl17XG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDAuN2VtO1xuICAgICAgICB3aWR0aDogNDAlO1xuICAgIH1cblxuICAgIGlucHV0W3RweWU9XCJzdWJtaXRcIl06ZGlzYWJsZWQge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQgIWltcG9ydGFudDtcbiAgICAgICAgY29sb3I6IGJsYWNrICFpbXBvcnRhbnQ7XG4gICAgfVxufSBcblxuQG1lZGlhIG9ubHkgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiA4MDBweCkge1xuXG4gICAgZm9ybXtcbiAgICAgICAgd2lkdGg6IDIwZW07XG4gICAgICAgIG1hcmdpbi10b3A6IDIwJTtcblxuICAgICAgICAjZm9ybS1jb250YWluZXJ7XG4gICAgICAgICAgICBoZWlnaHQ6IDgwJTtcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGlucHV0W3R5cGU9XCJ0ZXh0XCJdLCBpbnB1dFt0eXBlPVwicGFzc3dvcmRcIl17XG4gICAgICAgIHdpZHRoOiA2MCU7XG4gICAgICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICB9XG5cbiAgICBpbnB1dFt0eXBlPVwic3VibWl0XCJde1xuICAgICAgICBmb250LXNpemU6IDIwcHg7XG4gICAgfVxufVxuXG5AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDQ1MHB4KSB7XG4gICAgZm9ybXtcbiAgICAgICAgbWFyZ2luLXRvcDogMjUlO1xuICAgIH1cbn0iXX0= */"
+module.exports = "form {\n  border-radius: 1em;\n  text-align: center;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  margin: auto;\n  margin-top: 8%;\n  background-color: #bdc3c7;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 black;\n  height: 20em;\n  width: 25em; }\n  form .row {\n    margin-top: 0.2em;\n    padding: 3px; }\n  form input[type=\"text\"], form input[type=\"password\"] {\n    border: 1px solid grey; }\n  form input[type=\"submit\"] {\n    border-radius: 0.7em;\n    width: 40%; }\n  form input[tpye=\"submit\"]:disabled {\n    background-color: red !important;\n    color: black !important; }\n  @media only screen and (max-width: 800px) {\n  form {\n    width: 20em;\n    margin-top: 20%; }\n    form #form-container {\n      height: 80%; }\n  input[type=\"text\"], input[type=\"password\"] {\n    width: 60%;\n    font-size: 20px; }\n  input[type=\"submit\"] {\n    font-size: 20px; } }\n  @media only screen and (max-width: 450px) {\n  form {\n    margin-top: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcmVnaXN0ZXIvQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXHJlZ2lzdGVyXFxyZWdpc3Rlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFrQjtFQUNsQixrQkFBa0I7RUFDbEIsMEJBQWtCO0VBQWxCLHVCQUFrQjtFQUFsQixrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGNBQWM7RUFDZCx5QkFBeUI7RUFDekIsOERBQThEO0VBQzlELFlBQVk7RUFDWixXQUFXLEVBQUE7RUFUZjtJQVlRLGlCQUFpQjtJQUNqQixZQUFZLEVBQUE7RUFicEI7SUFrQlEsc0JBQXNCLEVBQUE7RUFsQjlCO0lBc0JRLG9CQUFvQjtJQUNwQixVQUFVLEVBQUE7RUF2QmxCO0lBMkJRLGdDQUFnQztJQUNoQyx1QkFBdUIsRUFBQTtFQUkvQjtFQUVJO0lBQ0ksV0FBVztJQUNYLGVBQWUsRUFBQTtJQUZuQjtNQUtRLFdBQVcsRUFBQTtFQUluQjtJQUNJLFVBQVU7SUFDVixlQUFlLEVBQUE7RUFHbkI7SUFDSSxlQUFlLEVBQUEsRUFDbEI7RUFHTDtFQUNJO0lBQ0ksZUFBZSxFQUFBLEVBQ2xCIiwiZmlsZSI6InNyYy9hcHAvcmVnaXN0ZXIvcmVnaXN0ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJmb3JtIHtcbiAgICBib3JkZXItcmFkaXVzOiAxZW07XG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgIHdpZHRoOiBtaW4tY29udGVudDtcbiAgICBtYXJnaW46IGF1dG87XG4gICAgbWFyZ2luLXRvcDogOCU7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI2JkYzNjNztcbiAgICBib3gtc2hhZG93OiAwIDRweCA4cHggMCByZ2JhKDAsIDAsIDAsIDAuMiksIDAgNnB4IDIwcHggMCBibGFjaztcbiAgICBoZWlnaHQ6IDIwZW07XG4gICAgd2lkdGg6IDI1ZW07XG5cbiAgICAucm93e1xuICAgICAgICBtYXJnaW4tdG9wOiAwLjJlbTtcbiAgICAgICAgcGFkZGluZzogM3B4O1xuICAgIH1cblxuXG4gICAgaW5wdXRbdHlwZT1cInRleHRcIl0sIGlucHV0W3R5cGU9XCJwYXNzd29yZFwiXXtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgZ3JleTtcbiAgICB9XG5cbiAgICBpbnB1dFt0eXBlPVwic3VibWl0XCJde1xuICAgICAgICBib3JkZXItcmFkaXVzOiAwLjdlbTtcbiAgICAgICAgd2lkdGg6IDQwJTtcbiAgICB9XG5cbiAgICBpbnB1dFt0cHllPVwic3VibWl0XCJdOmRpc2FibGVkIHtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogcmVkICFpbXBvcnRhbnQ7XG4gICAgICAgIGNvbG9yOiBibGFjayAhaW1wb3J0YW50O1xuICAgIH1cbn0gXG5cbkBtZWRpYSBvbmx5IHNjcmVlbiBhbmQgKG1heC13aWR0aDogODAwcHgpIHtcblxuICAgIGZvcm17XG4gICAgICAgIHdpZHRoOiAyMGVtO1xuICAgICAgICBtYXJnaW4tdG9wOiAyMCU7XG5cbiAgICAgICAgI2Zvcm0tY29udGFpbmVye1xuICAgICAgICAgICAgaGVpZ2h0OiA4MCU7XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICBpbnB1dFt0eXBlPVwidGV4dFwiXSwgaW5wdXRbdHlwZT1cInBhc3N3b3JkXCJde1xuICAgICAgICB3aWR0aDogNjAlO1xuICAgICAgICBmb250LXNpemU6IDIwcHg7XG4gICAgfVxuXG4gICAgaW5wdXRbdHlwZT1cInN1Ym1pdFwiXXtcbiAgICAgICAgZm9udC1zaXplOiAyMHB4O1xuICAgIH1cbn1cblxuQG1lZGlhIG9ubHkgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiA0NTBweCkge1xuICAgIGZvcm17XG4gICAgICAgIG1hcmdpbi10b3A6IDI1JTtcbiAgICB9XG59Il19 */"
 
 /***/ }),
 
@@ -1051,6 +1083,133 @@ var RegisterComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], RegisterComponent);
     return RegisterComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/security/security.component.html":
+/*!**************************************************!*\
+  !*** ./src/app/security/security.component.html ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n      <div *ngIf=\"securityState\" class=\"btn btn-success w-100\">Secure mode is currently on!</div>\n      <div *ngIf=\"!securityState\" class=\"btn btn-danger col-sm-12 align-self-center\">Secure mode is currently off!</div>\n      <mat-button-toggle class=\"col-sm-12 align-self-center\" [checked]=\"securityState\" (change)=\"changeState()\">Change Secure Mode</mat-button-toggle>\n    </div>\n  </div>\n"
+
+/***/ }),
+
+/***/ "./src/app/security/security.component.scss":
+/*!**************************************************!*\
+  !*** ./src/app/security/security.component.scss ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3NlY3VyaXR5L3NlY3VyaXR5LmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/security/security.component.ts":
+/*!************************************************!*\
+  !*** ./src/app/security/security.component.ts ***!
+  \************************************************/
+/*! exports provided: SecurityComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SecurityComponent", function() { return SecurityComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _services_security_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/security.service */ "./src/app/services/security.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+
+var SecurityComponent = /** @class */ (function () {
+    function SecurityComponent(auth, sec) {
+        this.auth = auth;
+        this.sec = sec;
+    }
+    SecurityComponent.prototype.ngOnInit = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                this.sec.isSecureStatusOn().then(function (state) {
+                    if (state !== null) {
+                        console.log("in ng on init security is " + state);
+                        _this.securityState = state;
+                    }
+                    else {
+                        window.alert('There has been a problem with server communication!');
+                    }
+                });
+                return [2 /*return*/];
+            });
+        });
+    };
+    SecurityComponent.prototype.changeState = function () {
+        if (this.sec.setSecureStatus(!this.securityState)) {
+            this.securityState = !this.securityState;
+        }
+        else {
+            window.alert('There has been a problem with server communication!');
+        }
+    };
+    SecurityComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-security',
+            template: __webpack_require__(/*! ./security.component.html */ "./src/app/security/security.component.html"),
+            styles: [__webpack_require__(/*! ./security.component.scss */ "./src/app/security/security.component.scss")]
+        }),
+        __metadata("design:paramtypes", [_services_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"], _services_security_service__WEBPACK_IMPORTED_MODULE_2__["SecurityService"]])
+    ], SecurityComponent);
+    return SecurityComponent;
 }());
 
 
@@ -1285,7 +1444,14 @@ var AuthService = /** @class */ (function () {
                         localStorage.setItem('token', data);
                         this.loggedIn.emit(true);
                         return [2 /*return*/, true];
-                    case 3: return [2 /*return*/, false];
+                    case 3:
+                        if (response.status === 429) {
+                            alert('Too many attempts in a short time. You will have to wait some minutes to try again.');
+                        }
+                        else {
+                            alert('Wrong username or password!');
+                        }
+                        return [2 /*return*/, false];
                 }
             });
         });
@@ -1603,6 +1769,149 @@ var RoleguardService = /** @class */ (function () {
         __metadata("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_2__["AuthService"], _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
     ], RoleguardService);
     return RoleguardService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/security.service.ts":
+/*!**********************************************!*\
+  !*** ./src/app/services/security.service.ts ***!
+  \**********************************************/
+/*! exports provided: SecurityService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SecurityService", function() { return SecurityService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth.service */ "./src/app/services/auth.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+var SecurityService = /** @class */ (function () {
+    function SecurityService(auth) {
+        this.auth = auth;
+    }
+    SecurityService.prototype.isSecureStatusOn = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var token, answer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log("in is secure status");
+                        token = this.auth.getToken();
+                        if (!token) return [3 /*break*/, 2];
+                        return [4 /*yield*/, fetch(location.origin + "/api/security", {
+                                method: 'GET',
+                                headers: {
+                                    // 'Accept': 'application/json',
+                                    // 'Content-Type': 'application/json',
+                                    'Authorization': this.auth.getToken()
+                                }
+                                // body: JSON.stringify({ name: name, keyword: phrase })
+                            }).then(function (res) {
+                                if (res.ok) {
+                                    return res.json();
+                                }
+                                else {
+                                    return null;
+                                }
+                            }).then(function (data) {
+                                if (data && (data.secureMode !== undefined) && (data.secureMode !== null)) {
+                                    console.log(data.secureMode);
+                                    return data.secureMode;
+                                }
+                                else {
+                                    return null;
+                                }
+                            })];
+                    case 1:
+                        answer = _a.sent();
+                        return [2 /*return*/, answer];
+                    case 2: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    SecurityService.prototype.setSecureStatus = function (status) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetch(location.origin + "/api/security", {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': this.auth.getToken(),
+                            },
+                            body: JSON.stringify({ status: status })
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        if (response.status === 200) {
+                            return [2 /*return*/, true];
+                        }
+                        else {
+                            return [2 /*return*/, false];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SecurityService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [_auth_service__WEBPACK_IMPORTED_MODULE_1__["AuthService"]])
+    ], SecurityService);
+    return SecurityService;
 }());
 
 

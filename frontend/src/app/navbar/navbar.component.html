@@ -10,6 +10,9 @@
       <li class="nav-item">
         <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showAdmin" [routerLink]="['/history']">History</a>
       </li>
+      <li class="nav-item">
+        <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showAdmin" [routerLink]="['/security']">Security Settings</a>
+      </li>
     </ul>
   </div>
   <div class="dropdown d-lg-none float-right">
@@ -22,6 +25,7 @@
       <a class="dropdown-item nav-link bg-dark text-light" [routerLink]="['/devices']">Home</a>
       <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showAdmin" [routerLink]="['/admin']">Admin</a>
       <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showAdmin" [routerLink]="['/history']">History</a>
+      <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showAdmin" [routerLink]="['/security']">Security Settings</a>
       <a class="dropdown-item nav-link bg-dark text-light" *ngIf="showLogin" [routerLink]="['/login']">Login</a>
       <a class="dropdown-item nav-link bg-dark text-light" *ngIf="!showLogin" (click)="logout()" [routerLink]="['/login']">Logout</a>
     </div>

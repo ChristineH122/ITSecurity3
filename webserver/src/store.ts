@@ -35,7 +35,7 @@ export default class Store {
   
 
   private sessionId : number;
-  private _secureMode : boolean;
+  public secureMode : boolean;
   /**
    * The database connection.
    *
@@ -96,7 +96,7 @@ export default class Store {
    */
   constructor() {
     this.sessionId = 1;
-    this._secureMode = true;
+    this.secureMode = false;
     // Bindings
     this.connectDb.bind(this);
     this.getUserRole.bind(this);
@@ -108,9 +108,6 @@ export default class Store {
     this.hash.bind(this);
   }
 
-  public get secureMode () : boolean {
-    return this._secureMode;
-  }
 
   /**
    * Connect to database.
@@ -148,7 +145,7 @@ export default class Store {
     }
     let identifier: string;
 
-    if (this._secureMode) {
+    if (this.secureMode) {
     identifier = uuid();
     } else {
       identifier = (++this.sessionId).toString();

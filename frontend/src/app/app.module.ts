@@ -5,7 +5,7 @@ import {
 } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { MatTableModule, MatSortModule, MatTabsModule, MatInputModule } from '@angular/material';
+import { MatTableModule, MatSortModule, MatTabsModule, MatInputModule, MatButtonToggleModule } from '@angular/material';
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { NavbarComponent } from "./navbar/navbar.component";
@@ -18,6 +18,7 @@ import { RegisterComponent } from "./register/register.component";
 import { DevicesComponent } from './devices/devices.component';
 import { HistoryComponent } from './history/history.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SecurityComponent } from './security/security.component';
 
 export class MyHammerConfig extends HammerGestureConfig {
   overrides = <any>{
@@ -39,11 +40,13 @@ export function getToken() {
     DevicesComponent,
     HistoryComponent,
     SettingsComponent,
+    SecurityComponent,
   ],
   imports: [
     MatTabsModule,
     MatSortModule,
     MatTableModule,
+    MatButtonToggleModule,
     BrowserModule,
     FormsModule,
     BrowserAnimationsModule,
