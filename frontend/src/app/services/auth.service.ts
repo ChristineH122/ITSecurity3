@@ -21,8 +21,6 @@ export class AuthService {
       body: JSON.stringify({ name: name, keyword: phrase })
     });
 
-    console.log(response);
-
     if (response.status === 200) {
       return true;
     } else {
@@ -31,25 +29,23 @@ export class AuthService {
   }
 
   public async login(name: string, word: string): Promise<boolean> {
-    let token = this.jwtHelper.tokenGetter();
+    const token = this.jwtHelper.tokenGetter();
 
     if (token && !this.jwtHelper.isTokenExpired(token)) {
       return Promise.resolve(false);
     }
-    
+
     const response = await fetch(`${location.origin}/api/login`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        // 'Authorization': this.getToken()
         'Authorization': token
       },
       body: JSON.stringify({ name: name, keyword: word })
     });
     if (response.status === 200) {
       const data = await response.json();
-      console.log(data);
       localStorage.setItem('token', data);
       this.loggedIn.emit(true);
       return true;
@@ -82,16 +78,7 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // public getRole(): string {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     return decode(token).role;
-  //   }
-
-  //   return null;
-  // }
-
-    public getRole(): string {
+  public getRole(): string {
     if (this.isAdmin) {
       return 'admin';
     }
@@ -102,27 +89,26 @@ export class AuthService {
   public async isAdmin(): Promise<boolean> {
     const token = this.getToken();
     if (token) {
-    return fetch(`${location.origin}/api/access`, {
-      method: 'GET',
-      headers: {
-        // 'Accept': 'application/json',
-        // Content-Type': 'application/json',
-        'Authorization': this.getToken()
-      }
-    }).then(res => { if (res.ok) {
-      return res.json();
-    } else {
-      return null;
-    }}).then(data => {
-      if (data && data.isAdmin) {
-        return data.isAdmin;
+      return fetch(`${location.origin}/api/access`, {
+        method: 'GET',
+        headers: {
+          // 'Accept': 'application/json',
+          // Content-Type': 'application/json',
+          'Authorization': this.getToken()
+        }
+      }).then(res => { if (res.ok) {
+        return res.json();
       } else {
-        return false;
-      }
-    });
-  } else {
-    return false;
-  }
-    // return this.getRole() === 'admin';
+        return null;
+      }}).then(data => {
+        if (data && data.isAdmin) {
+          return data.isAdmin;
+        } else {
+          return false;
+        }
+      });
+    } else {
+      return false;
+    }
   }
 }

@@ -10,13 +10,25 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 })
 export class SettingsComponent implements OnInit {
 
+  constructor(private deviceService: DeviceService) {
+
+    this.ngOnInit.bind(this);
+    this.columnNames = ['name', 'actual', 'set'];
+  }
+
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private deviceService : DeviceService) {
-    
-    this.ngOnInit.bind(this);
-    this.columnNames = ['name','actual','set'];
-  }
+  @Input()
+  public devices: MatTableDataSource<Device>;
+
+  @Input()
+  public columnNames: string[];
+
+  @Input()
+  public msg: string;
+
+  @Input()
+  public success: boolean;
 
   async ngOnInit() {
     const data = await this.deviceService.getDevices();
@@ -24,24 +36,12 @@ export class SettingsComponent implements OnInit {
     this.devices.sort = this.sort;
   }
 
-  @Input()
-  public devices : MatTableDataSource<Device>;
-
-  @Input()
-  public columnNames : string[];
-
-  @Input()
-  public msg : string;
-
-  @Input()
-  public success : boolean;
-
-  public async save() : Promise<void> {
-    console.log(this.devices.data);
-    let result = await this.deviceService.updateDevices(this.devices.data);
-    if(! result) {this.msg = "Unable to save changes!"; this.success = false; }
-    else {this.msg = "Successfully saved changes!";  this.success = true; }
-    console.log(this.msg);
-    console.log(this.success);
+  public async save(): Promise<void> {
+    const result = await this.deviceService.updateDevices(this.devices.data);
+    if (! result) {
+      this.msg = 'Unable to save changes!'; this.success = false;
+    } else {
+      this.msg = 'Successfully saved changes!';  this.success = true;
+    }
   }
 }

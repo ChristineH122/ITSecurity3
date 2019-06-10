@@ -22,9 +22,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   public async login() {
-    console.log("login");
     const result = await this._authService.login(this.username, this.keyword);
-    console.log(result);
     if (result) {
       this._router.navigate(['devices']);
     }

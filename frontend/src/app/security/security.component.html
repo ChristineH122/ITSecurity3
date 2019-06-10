@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
-      <div *ngIf="securityState" class="btn btn-success w-100">Secure mode is currently on!</div>
-      <div *ngIf="!securityState" class="btn btn-danger col-sm-12 align-self-center">Secure mode is currently off!</div>
-      <mat-button-toggle class="col-sm-12 align-self-center" [checked]="securityState" (change)="changeState()">Change Secure Mode</mat-button-toggle>
-    </div>
+    <div *ngIf="securityState" class="btn btn-success w-100">Secure mode is currently on!</div>
+    <div *ngIf="!securityState" class="btn btn-danger col-sm-12 align-self-center">Secure mode is currently off!</div>
+    <mat-button-toggle class="col-sm-12 align-self-center" [checked]="securityState" (change)="changeState()">Change Secure Mode</mat-button-toggle>
   </div>
+</div>

@@ -10,24 +10,22 @@ import { ActionService } from '../services/action.service';
 })
 export class HistoryComponent implements OnInit {
 
-  @ViewChild(MatSort) sort: MatSort;
-
-  constructor(private actionService : ActionService) {
-    
+  constructor(private actionService: ActionService) {
     this.ngOnInit.bind(this);
-    this.columnNames = ['action','stamp','user'];
+    this.columnNames = ['action', 'stamp', 'user'];
   }
 
+  @ViewChild(MatSort) sort: MatSort;
+
+  @Input()
+  public actions: MatTableDataSource<Action>;
+
+  @Input()
+  public columnNames: string[];
+
   async ngOnInit() {
-    let data = await this.actionService.getActions();
+    const data = await this.actionService.getActions();
     this.actions = new MatTableDataSource(data);
     this.actions.sort = this.sort;
   }
-
-  @Input()
-  public actions : MatTableDataSource<Action>;
-
-  @Input()
-  public columnNames : string[];
-
 }

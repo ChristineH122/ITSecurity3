@@ -28,7 +28,6 @@ export interface IHashResult {
  */
 export interface ITokenContent {
   uuid: string,
-  //role: string removed from Christine
 }
 
 export default class Store {
@@ -96,7 +95,7 @@ export default class Store {
    */
   constructor() {
     this.sessionId = 1;
-    this.secureMode = false;
+    this.secureMode = true;
     // Bindings
     this.connectDb.bind(this);
     this.getUserRole.bind(this);
@@ -152,7 +151,6 @@ export default class Store {
     }
     let user = await this.userRepo.findOne({name: userName});
     user.uuid = identifier;
-    console.log(user);
     await this.userRepo.save(user);
     return identifier;
   }
@@ -169,10 +167,10 @@ export default class Store {
       return null;
     }
     let user = await this.handleError(this.userRepo.findOne({name: userName}));
-    if(user){
+    if(user) {
       return user.role ? user.role.name : null;
     }
-    else{
+    else {
       return null;
     }
   }
@@ -186,10 +184,7 @@ export default class Store {
    * @returns {Promise<Boolean>}
    * @memberof Store
    */
-  public async validateUserCredentials(
-    userName: string,
-    key: string
-  ): Promise<Boolean> {
+  public async validateUserCredentials(userName: string, key: string): Promise<Boolean> {
     if (!userName || !key) {
       return false;
     }
@@ -225,7 +220,6 @@ export default class Store {
     user.uuid = uuid();
 
     let result: InsertResult = await this.handleError(this.userRepo.insert(user));
-    console.log(result);
     // return whether the insert was succesfull;
     return !!result;
   }
@@ -252,8 +246,7 @@ export default class Store {
      for(let action of actions) {
        action.user = this.cleanUser(action.user);
      }
-
-     console.log(actions);
+     
      return actions;
   }
 
@@ -266,16 +259,15 @@ export default class Store {
    * @memberof Store
    */
   public async addAction(operation: string, uuid: string) : Promise<boolean> {
-    console.log("in add action");
     let action = new Action();
     let user : User = await this.userRepo.findOne({ uuid: uuid});
-    if(! user) return false;
+    if(!user) return false;
 
     action.action = operation
     action.stamp = new Date();
     action.userId = user.id;
     let result = this.handleError(this.actionRepo.save(action));
-    console.log("in add action found result");
+
     return !!result;
   }
 
@@ -295,7 +287,7 @@ export default class Store {
    * @returns {Promise<boolean>}
    * @memberof Store
    */
-  public async updateDevice(device: Device,uuid: string) : Promise<boolean> {
+  public async updateDevice(device: Device, uuid: string) : Promise<boolean> {
     let user = await this.userRepo.findOne({uuid: uuid});
     let result : Device = await this.handleError(this.deviceRepo.save(device,{data: user}));
     return result ? true : false;
@@ -309,10 +301,10 @@ export default class Store {
    * @returns {Promise<boolean>}
    * @memberof Store
    */
-  public async updateDevices(devices: Device[],uuid: string) : Promise<boolean> {
+  public async updateDevices(devices: Device[], uuid: string) : Promise<boolean> {
     let result = true;
 
-    for(let device of devices){
+    for(let device of devices) {
       let tmpResult = await this.updateDevice(device,uuid);
       result = result && tmpResult;
     }
@@ -321,8 +313,7 @@ export default class Store {
   }
 
   /**
-   * Extracts the role from a fiven token.
-   * !!!! No check included whether the token was manipulated !!!!!
+   * Extracts the role from database according to a given token.
    *
    * @param {string} token
    * @returns {Promise<string>}
@@ -347,11 +338,7 @@ export default class Store {
    */
   public decode(token: string ) : ITokenContent {
     let payload : any = jwt.decode(token);
-    console.log("in decode");
-    console.log(token);
-    console.log(payload);
-    console.log(payload.id);
-    // return payload ? { role: payload.role, uuid: payload.id  } : null; von Christine verändert
+
     return payload ? { uuid: payload.id  } : null;
   }
 
@@ -378,13 +365,11 @@ export default class Store {
     result.operation = operation;
     Object.assign(result,data);
     return JSON.stringify(result);
-    
   }
 
   /**
    * Creates a new token signed with the store secret.
    *
-   * @param {string} role //removed from Christine
    * @param {string} uuid
    * @returns
    * @memberof Store
@@ -399,7 +384,7 @@ export default class Store {
   }
 
   /**
-   * Addes error handeling to the given promise.
+   * Adds error handeling to the given promise.
    *
    * @template T
    * @param {Promise<T>} action
@@ -409,7 +394,6 @@ export default class Store {
   private async handleError<T>(action: Promise<T>) : Promise<T> {
     
     let result = await action.catch(error => {
-      console.log(`error: ${error}`);
       this.logRepo.insert(new Log({ message: `error: ${error}`, stamp: new Date() }));
     });
 
@@ -441,8 +425,7 @@ export default class Store {
 
   private cleanUser(user: User) : User{
     let data = user as any;
-    for(let key of Object.keys(data))
-    {
+    for(let key of Object.keys(data)) {
       if(key !== "name" && data[key]){
         delete data[key];
       }

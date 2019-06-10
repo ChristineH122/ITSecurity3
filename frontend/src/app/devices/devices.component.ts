@@ -10,23 +10,22 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 })
 export class DevicesComponent implements OnInit {
 
+  constructor(private deviceService: DeviceService) {
+    this.ngOnInit.bind(this);
+    this.columnNames = ['name', 'actual', 'set'];
+  }
+
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private deviceService : DeviceService) {
-    
-    this.ngOnInit.bind(this);
-    this.columnNames = ['name','actual','set'];
-  }
+  @Input()
+  public devices: MatTableDataSource<Device>;
+
+  @Input()
+  public columnNames: string[];
 
   async ngOnInit() {
     const data = await this.deviceService.getDevices();
     this.devices = new MatTableDataSource(data);
     this.devices.sort = this.sort;
   }
-
-  @Input()
-  public devices : MatTableDataSource<Device>;
-
-  @Input()
-  public columnNames : string[];
 }

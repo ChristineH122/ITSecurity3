@@ -27,8 +27,6 @@ export class NavbarComponent implements OnInit {
   }
 
   async ngOnInit() {
-    //this.showAdmin = await this._authService.isAdmin(); removed from Christine
-
     this._authService.loggedIn.subscribe(async loggedIn => {
       this.showLogin = !loggedIn;
       this.showAdmin = await this._authService.isAdmin();

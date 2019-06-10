@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { AuthService } from "../services/auth.service";
-import { Router } from "@angular/router";
+import { Component, OnInit, Input } from '@angular/core';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "app-register",
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"],
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) {}
@@ -22,12 +22,11 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {}
 
   public async register() {
-    console.log("register");
     const result = await this.auth.register(this.name, this.phraseOne);
     if (result) {
-      this.router.navigate(["login"]);
+      this.router.navigate(['login']);
     } else {
-      alert("Username and/or password are not valid or not secure enough. Please try again!");
+      alert('Username and/or password are not valid or not secure enough. Please try again!');
     }
   }
 
