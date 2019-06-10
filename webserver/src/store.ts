@@ -320,9 +320,6 @@ export default class Store {
    * @memberof Store
    */
   public async getRole(token: string): Promise<string> {
-    // get the decoded payload ignoring signature, no secretOrPrivateKey needed
-    // use verify instead 
-    // https://www.npmjs.com/package/jsonwebtoken
     let payload: any = jwt.decode(token);
     let user: User = await this.userRepo.findOne({uuid: payload.id}); 
 
@@ -379,7 +376,7 @@ export default class Store {
     return jwt.sign(
       {id: uuid},
       secret,
-      { expiresIn: "1d"}
+      { expiresIn: "1h"}
     );
   }
 
