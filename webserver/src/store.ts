@@ -392,7 +392,6 @@ export default class Store {
    * @memberof Store
    */
   private async handleError<T>(action: Promise<T>) : Promise<T> {
-    
     let result = await action.catch(error => {
       this.logRepo.insert(new Log({ message: `error: ${error}`, stamp: new Date() }));
     });

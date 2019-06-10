@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-tab-group>\n  <mat-tab label=\"Settings\">\n    <app-settings></app-settings>\n  </mat-tab>\n  <mat-tab label=\"History\">\n    <app-history></app-history>\n  </mat-tab>\n  <mat-tab label=\"Security\">\n      <div class=\"container\">\n      <div class=\"row\">\n          <div *ngIf=\"securityState\" class=\"btn btn-success w-100\">Secure mode is currently on!</div>\n          <div *ngIf=\"!securityState\" class=\"btn btn-danger col-sm-12 align-self-center\">Secure mode is currently off!</div>\n          <mat-button-toggle class=\"col-sm-12 align-self-center\" [checked]=\"securityState\" (change)=\"changeState()\">Change Secure Mode</mat-button-toggle>\n        </div>\n      </div>\n    </mat-tab>\n</mat-tab-group>"
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col align-self-center\">\n      <app-settings></app-settings>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = "<mat-tab-group>\n  <mat-tab label=\"Settings\">\n    <app-sett
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "mat-tab-group {\n  background-color: white;\n  height: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYWRtaW4vQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXGFkbWluXFxhZG1pbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLHVCQUF1QjtFQUN2QixZQUFZLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9hZG1pbi9hZG1pbi5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIm1hdC10YWItZ3JvdXB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgaGVpZ2h0OiAxMDAlO1xufSJdfQ== */"
+module.exports = "mat-tab-group {\n  height: 100%; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYWRtaW4vQzpcXEZIXFw0U2VtZXN0ZXJcXElUU2VjdXJpdHlcXFNtYXJ0RVAtbWFzdGVyXFxTbWFydEVQLW1hc3RlclxcZnJvbnRlbmQvc3JjXFxhcHBcXGFkbWluXFxhZG1pbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQVksRUFBQSIsImZpbGUiOiJzcmMvYXBwL2FkbWluL2FkbWluLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsibWF0LXRhYi1ncm91cHtcbiAgICBoZWlnaHQ6IDEwMCU7XG59XG4iXX0= */"
 
 /***/ }),
 
@@ -116,7 +116,6 @@ var AdminComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 this.sec.isSecureStatusOn().then(function (state) {
                     if (state !== null) {
-                        console.log("in ng on init security is " + state);
                         _this.securityState = state;
                     }
                     else {
@@ -282,7 +281,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var AppComponent = /** @class */ (function () {
     function AppComponent() {
-        this.title = 'smartep';
+        this.title = 'Broken Authentication';
     }
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -783,12 +782,9 @@ var LoginComponent = /** @class */ (function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log("login");
-                        return [4 /*yield*/, this._authService.login(this.username, this.keyword)];
+                    case 0: return [4 /*yield*/, this._authService.login(this.username, this.keyword)];
                     case 1:
                         result = _a.sent();
-                        console.log(result);
                         if (result) {
                             this._router.navigate(['devices']);
                         }
@@ -827,7 +823,7 @@ var LoginComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow mb-2\">\n  <div class=\"collapse navbar-collapse\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/devices']\">Home</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      </li>\n    </ul>\n  </div>\n  <div class=\"dropdown d-lg-none float-right\">\n    <button type=\"button\" class=\"bg-transparent border-0\" data-toggle=\"dropdown\">\n      <i class=\"material-icons\">\n        dehaze\n      </i>\n    </button>\n    <div class=\"dropdown-menu bg-dark\">\n      <a class=\"dropdown-item nav-link bg-dark text-light\" [routerLink]=\"['/devices']\">Home</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showLogin\" [routerLink]=\"['/login']\">Login</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"!showLogin\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n    </div>\n  </div>\n  <div class=\"d-none d-lg-block\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\" *ngIf=\"showLogin\">\n        <a class=\"nav-link\" [routerLink]=\"['/login']\">Login</a>\n      </li>\n      <li class=\"nav-item\" *ngIf=\"!showLogin\">\n        <a class=\"nav-link\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n      </li>\n      <!--<li class=\"nav-item\" *ngIf=\"showAdmin\">\n        <a class=\"nav-link\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>-->\n    </ul>\n  </div>\n</nav>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow mb-2\">\n  <div class=\"collapse navbar-collapse\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\">\n        <a class=\"nav-link\" [routerLink]=\"['/devices']\">Home</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      </li>\n      <li class=\"nav-item\">\n        <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      </li>\n    </ul>\n  </div>\n  <div class=\"dropdown d-lg-none float-right\">\n    <button type=\"button\" class=\"bg-transparent border-0\" data-toggle=\"dropdown\">\n      <i class=\"material-icons\">\n        dehaze\n      </i>\n    </button>\n    <div class=\"dropdown-menu bg-dark\">\n      <a class=\"dropdown-item nav-link bg-dark text-light\" [routerLink]=\"['/devices']\">Home</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/admin']\">Admin</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/history']\">History</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showAdmin\" [routerLink]=\"['/security']\">Security Settings</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"showLogin\" [routerLink]=\"['/login']\">Login</a>\n      <a class=\"dropdown-item nav-link bg-dark text-light\" *ngIf=\"!showLogin\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n    </div>\n  </div>\n  <div class=\"d-none d-lg-block\">\n    <ul class=\"navbar-nav\">\n      <li class=\"nav-item\" *ngIf=\"showLogin\">\n        <a class=\"nav-link\" [routerLink]=\"['/login']\">Login</a>\n      </li>\n      <li class=\"nav-item\" *ngIf=\"!showLogin\">\n        <a class=\"nav-link\" (click)=\"logout()\" [routerLink]=\"['/login']\">Logout</a>\n      </li>\n    </ul>\n  </div>\n</nav>"
 
 /***/ }),
 
@@ -913,7 +909,6 @@ var NavbarComponent = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                //this.showAdmin = await this._authService.isAdmin(); removed from Christine
                 this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
                     var _a;
                     return __generator(this, function (_b) {
@@ -1040,16 +1035,14 @@ var RegisterComponent = /** @class */ (function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log("register");
-                        return [4 /*yield*/, this.auth.register(this.name, this.phraseOne)];
+                    case 0: return [4 /*yield*/, this.auth.register(this.name, this.phraseOne)];
                     case 1:
                         result = _a.sent();
                         if (result) {
-                            this.router.navigate(["login"]);
+                            this.router.navigate(['login']);
                         }
                         else {
-                            alert("Username and/or password are not valid or not secure enough. Please try again!");
+                            alert('Username and/or password are not valid or not secure enough. Please try again!');
                         }
                         return [2 /*return*/];
                 }
@@ -1076,7 +1069,7 @@ var RegisterComponent = /** @class */ (function () {
     ], RegisterComponent.prototype, "phraseTwo", void 0);
     RegisterComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: "app-register",
+            selector: 'app-register',
             template: __webpack_require__(/*! ./register.component.html */ "./src/app/register/register.component.html"),
             styles: [__webpack_require__(/*! ./register.component.scss */ "./src/app/register/register.component.scss")]
         }),
@@ -1096,7 +1089,7 @@ var RegisterComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n      <div *ngIf=\"securityState\" class=\"btn btn-success w-100\">Secure mode is currently on!</div>\n      <div *ngIf=\"!securityState\" class=\"btn btn-danger col-sm-12 align-self-center\">Secure mode is currently off!</div>\n      <mat-button-toggle class=\"col-sm-12 align-self-center\" [checked]=\"securityState\" (change)=\"changeState()\">Change Secure Mode</mat-button-toggle>\n    </div>\n  </div>\n"
+module.exports = "<div class=\"container w-100\">\n  <div class=\"row\">\n    <div class=\"col text-center\">\n      <div *ngIf=\"securityState\" class=\"btn btn-success\">Secure mode is currently on!</div>\n      <div *ngIf=\"!securityState\" class=\"btn btn-danger\">Secure mode is currently off!</div>\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col text-center\">\n      <mat-button-toggle [checked]=\"securityState\" (change)=\"changeState()\">Change Secure Mode</mat-button-toggle>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1182,7 +1175,6 @@ var SecurityComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 this.sec.isSecureStatusOn().then(function (state) {
                     if (state !== null) {
-                        console.log("in ng on init security is " + state);
                         _this.securityState = state;
                     }
                     else {
@@ -1402,7 +1394,6 @@ var AuthService = /** @class */ (function () {
                         })];
                     case 1:
                         response = _a.sent();
-                        console.log(response);
                         if (response.status === 200) {
                             return [2 /*return*/, true];
                         }
@@ -1429,7 +1420,6 @@ var AuthService = /** @class */ (function () {
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
-                                    // 'Authorization': this.getToken()
                                     'Authorization': token
                                 },
                                 body: JSON.stringify({ name: name, keyword: word })
@@ -1440,7 +1430,6 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, response.json()];
                     case 2:
                         data = _a.sent();
-                        console.log(data);
                         localStorage.setItem('token', data);
                         this.loggedIn.emit(true);
                         return [2 /*return*/, true];
@@ -1472,13 +1461,6 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.getToken = function () {
         return localStorage.getItem('token');
     };
-    // public getRole(): string {
-    //   const token = localStorage.getItem('token');
-    //   if (token) {
-    //     return decode(token).role;
-    //   }
-    //   return null;
-    // }
     AuthService.prototype.getRole = function () {
         if (this.isAdmin) {
             return 'admin';
@@ -1843,7 +1825,6 @@ var SecurityService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("in is secure status");
                         token = this.auth.getToken();
                         if (!token) return [3 /*break*/, 2];
                         return [4 /*yield*/, fetch(location.origin + "/api/security", {
@@ -1853,7 +1834,6 @@ var SecurityService = /** @class */ (function () {
                                     // 'Content-Type': 'application/json',
                                     'Authorization': this.auth.getToken()
                                 }
-                                // body: JSON.stringify({ name: name, keyword: phrase })
                             }).then(function (res) {
                                 if (res.ok) {
                                     return res.json();
@@ -1863,7 +1843,6 @@ var SecurityService = /** @class */ (function () {
                                 }
                             }).then(function (data) {
                                 if (data && (data.secureMode !== undefined) && (data.secureMode !== null)) {
-                                    console.log(data.secureMode);
                                     return data.secureMode;
                                 }
                                 else {
@@ -2026,21 +2005,17 @@ var SettingsComponent = /** @class */ (function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log(this.devices.data);
-                        return [4 /*yield*/, this.deviceService.updateDevices(this.devices.data)];
+                    case 0: return [4 /*yield*/, this.deviceService.updateDevices(this.devices.data)];
                     case 1:
                         result = _a.sent();
                         if (!result) {
-                            this.msg = "Unable to save changes!";
+                            this.msg = 'Unable to save changes!';
                             this.success = false;
                         }
                         else {
-                            this.msg = "Successfully saved changes!";
+                            this.msg = 'Successfully saved changes!';
                             this.success = true;
                         }
-                        console.log(this.msg);
-                        console.log(this.success);
                         return [2 /*return*/];
                 }
             });
