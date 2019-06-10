@@ -45,7 +45,7 @@ CREATE TABLE `Action` (
 
 LOCK TABLES `Action` WRITE;
 /*!40000 ALTER TABLE `Action` DISABLE KEYS */;
-INSERT INTO `Action` VALUES (3,'name: \'Heizung Buero\' to \'Heizung Buero Boden\'','2019-05-22 13:10:21',8),(4,'name: \'Heizung Schlafzimmer\' to \'Heizung Schlafzimmer Alt\'','2019-05-22 13:12:33',8);
+INSERT INTO `Action` VALUES (3,'name: \'Thermometer Outdoor\' to \'Thermometer outside\'','2019-05-28 15:12:11',8),(4,'name: \'Heating\' to \'Heating living room\'','2019-06-02 13:12:33',8);
 /*!40000 ALTER TABLE `Action` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,7 +70,7 @@ CREATE TABLE `Actor` (
 
 LOCK TABLES `Actor` WRITE;
 /*!40000 ALTER TABLE `Actor` DISABLE KEYS */;
-INSERT INTO `Actor` VALUES (1,'HZG Wohnzimmer','22'),(2,'HZG Schlafzimmer','22'),(3,'HZG Buero','21');
+INSERT INTO `Actor` VALUES (1,'Thermometer outside','32'),(2,'Thermometer inside','20'),(3,'Heating living room','0');
 /*!40000 ALTER TABLE `Actor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,7 +100,7 @@ CREATE TABLE `Device` (
 
 LOCK TABLES `Device` WRITE;
 /*!40000 ALTER TABLE `Device` DISABLE KEYS */;
-INSERT INTO `Device` VALUES (1,1,1,'Heizung Wohnzimmer XYZ'),(2,2,2,'Heizung Schlafzimmer Alt'),(3,3,3,'Heizung Buero Boden');
+INSERT INTO `Device` VALUES (1,1,1,'Thermometer outside'),(2,2,2,'Thermometer inside'),(3,3,3,'Heating living room');
 /*!40000 ALTER TABLE `Device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +177,7 @@ CREATE TABLE `Sensor` (
 
 LOCK TABLES `Sensor` WRITE;
 /*!40000 ALTER TABLE `Sensor` DISABLE KEYS */;
-INSERT INTO `Sensor` VALUES (1,'HZG Wohnzimmer','22'),(2,'HZG Schlafzimmer','22'),(3,'HZG Buero','21');
+INSERT INTO `Sensor` VALUES (1,'Thermometer outside','31'),(2,'Thermometer inside','20'),(3,'Heating living room','0');
 /*!40000 ALTER TABLE `Sensor` ENABLE KEYS */;
 UNLOCK TABLES;
 
