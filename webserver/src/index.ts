@@ -3,6 +3,7 @@ import * as path from "path";
 import Store, { ITokenContent } from "./store";
 import logger from "./logger";
 import { Device } from "./entity/Device";
+import { AdvancedConsoleLogger } from "typeorm";
 
 /* tslint: disable */
 const bodyParser = require("body-parser");
@@ -143,7 +144,9 @@ export class Server {
 
     if(name && keyword && createUser) {
       let result = await this.store.createUser(name,keyword);
-      if(result) res.status(200).send();
+      if(result) {
+        res.status(200).send();
+      }
       else res.status(409).send();
     }
     else {
@@ -151,7 +154,7 @@ export class Server {
     }
   }
 
-  private isSecurePassword(username: string, password: string) {
+  private async isSecurePassword(username: string, password: string) {
     if (username == password) {
       return false;
     }
@@ -160,17 +163,16 @@ export class Server {
       return false;
     }
 
-    fs.readFile('wordlist.txt', (err : any, data: any) => {
-      if (err) {
-        return true;
+    try {
+      const data = fs.readFileSync('wordlist.txt');
+      if (data.indexOf(password) >= 0) {
+        return false;
       } else {
-        if (data.indexOf(password) >= 0) {
-          return false;
-        } else {
-          return true;
-        }
+        return true;
       }
-    });
+    } catch {
+      return true;
+    }
   }
 
   private async isAuthorized(request: express.Request): Promise<string> {
