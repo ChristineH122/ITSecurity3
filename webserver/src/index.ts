@@ -26,25 +26,26 @@ const allowedExt = [
 export class Server {
   public app: express.Application;
 
+  //bruteforce protection - according to https://www.npmjs.com/package/express-brute
+  private bruteforce: any;
+
   constructor(private store: Store) {
     //Setup
     this.store.connectDb();
     this.app = express();
     this.app.use(bodyParser.json());
-    
-    //bruteforce protection - according to https://www.npmjs.com/package/express-brute
-    const memStore = new expressBrute.MemoryStore();
-    const bruteforce = new expressBrute(memStore, {
+    this.bruteforce = new expressBrute(new expressBrute.MemoryStore(), {
       freeRetries: 3,
       minWait: 1*60*1000, // 1 minute
       maxWait: 60*60*1000, // 1 hour,
-      failCallback: this.failCallback,
+      failCallback: this.bruteforceDetected.bind(this),
     });
+  
 
     // Middleware
     //this.app.use(this.logRequest.bind(this));
     //Publicly accessible routes
-    this.app.post("/api/login", bruteforce.prevent, this.loginUser.bind(this)); //bruteforce.prevent,
+    this.app.post("/api/login", this.bruteforce.prevent, this.loginUser.bind(this));
     this.app.post("/api/register",this.registerUser.bind(this));
     this.app.post("/api/security", this.setSecureMode.bind(this));
     this.app.put("/api/update/devices",this.updateDevices.bind(this));
@@ -59,9 +60,14 @@ export class Server {
     this.log.bind(this);
   }
 
-  private async failCallback(req: express.Request, res: express.Response, next: express.NextFunction, nextValidRequestDate: any) {
+  private async bruteforceDetected(req: express.Request, res: express.Response, next: express.NextFunction, nextValidRequestDate: any) {
     //bruteforce detected!
-    res.status(429).send();
+    if (this.store.secureMode) {
+      res.status(429).send();
+    } else {
+      this.bruteforce.reset(req.ip, null, null);
+      next();
+    }
   }
 
   private logRequest(req: express.Request, res: express.Response,next: express.NextFunction) {
@@ -126,6 +132,7 @@ export class Server {
       let token = await this.store.createToken(uuid);
 
       res.status(200).send(JSON.stringify(token));
+      this.bruteforce.reset(req.ip, null, null);
     } else {
       res.status(401).send();
     }
