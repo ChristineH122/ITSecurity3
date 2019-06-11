@@ -913,9 +913,17 @@ var NavbarComponent = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                this.showLogin = !loggedIn;
-                                return [2 /*return*/];
+                            var _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0:
+                                        this.showLogin = !loggedIn;
+                                        _a = this;
+                                        return [4 /*yield*/, this._authService.isAdmin()];
+                                    case 1:
+                                        _a.showAdmin = _b.sent();
+                                        return [2 /*return*/];
+                                }
                             });
                         }); });
                         _a = this;
