@@ -907,23 +907,23 @@ var NavbarComponent = /** @class */ (function () {
     };
     NavbarComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _a;
             var _this = this;
-            return __generator(this, function (_a) {
-                this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
-                    var _a;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        this._authService.loggedIn.subscribe(function (loggedIn) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
                                 this.showLogin = !loggedIn;
-                                _a = this;
-                                return [4 /*yield*/, this._authService.isAdmin()];
-                            case 1:
-                                _a.showAdmin = _b.sent();
                                 return [2 /*return*/];
-                        }
-                    });
-                }); });
-                return [2 /*return*/];
+                            });
+                        }); });
+                        _a = this;
+                        return [4 /*yield*/, this._authService.isAdmin()];
+                    case 1:
+                        _a.showAdmin = _b.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };
@@ -1476,8 +1476,6 @@ var AuthService = /** @class */ (function () {
                     return [2 /*return*/, fetch(location.origin + "/api/access", {
                             method: 'GET',
                             headers: {
-                                // 'Accept': 'application/json',
-                                // Content-Type': 'application/json',
                                 'Authorization': this.getToken()
                             }
                         }).then(function (res) {
@@ -1485,7 +1483,7 @@ var AuthService = /** @class */ (function () {
                                 return res.json();
                             }
                             else {
-                                return null;
+                                return false;
                             }
                         }).then(function (data) {
                             if (data && data.isAdmin) {

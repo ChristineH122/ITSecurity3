@@ -95,7 +95,7 @@ export default class Store {
    */
   constructor() {
     this.sessionId = 1;
-    this.secureMode = true;
+    this.secureMode = false;
     // Bindings
     this.connectDb.bind(this);
     this.getUserRole.bind(this);
@@ -334,9 +334,13 @@ export default class Store {
    * @memberof Store
    */
   public decode(token: string ) : ITokenContent {
-    let payload : any = jwt.decode(token);
-
-    return payload ? { uuid: payload.id  } : null;
+    if (!this.secureMode) {
+      let payload : any = jwt.decode(token);
+      return payload ? { uuid: payload.id  } : null;
+    } else {
+      let payload : any = jwt.verify(token, secret);
+      return payload ? { uuid: payload.id  } : null;
+    }    
   }
 
   /**

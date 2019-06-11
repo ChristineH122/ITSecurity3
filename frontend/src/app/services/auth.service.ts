@@ -92,14 +92,12 @@ export class AuthService {
       return fetch(`${location.origin}/api/access`, {
         method: 'GET',
         headers: {
-          // 'Accept': 'application/json',
-          // Content-Type': 'application/json',
           'Authorization': this.getToken()
         }
       }).then(res => { if (res.ok) {
         return res.json();
       } else {
-        return null;
+        return false;
       }}).then(data => {
         if (data && data.isAdmin) {
           return data.isAdmin;
