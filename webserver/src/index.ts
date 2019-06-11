@@ -144,7 +144,7 @@ export class Server {
     let createUser: boolean = true;
 
     if (this.store.secureMode) {
-      if (!this.isSecurePassword(name, keyword)) {
+      if (! await this.isSecurePassword(name, keyword)) {
         createUser = false;
       }
     }
